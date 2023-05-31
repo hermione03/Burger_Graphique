@@ -41,7 +41,7 @@ static void draw(void);
 
 int main(int argc, char **argv)
 {
-  if (!gl4duwCreateWindow(argc, argv, "GL4Dummies", 0, 0,
+  if (!gl4duwCreateWindow(argc, argv, "Hungry ?", 0, 0,
                           _wW, _wH, GL4DW_RESIZABLE | GL4DW_SHOWN))
     return 1;
   /* charge l'avion */
@@ -89,7 +89,7 @@ static void init(void)
   glCullFace(GL_BACK);
   _sphere = gl4dgGenSpheref(30, 30);
   glGenTextures(1, &_tId);
-  loadTexture(_tId, "images/nua");
+  loadTexture(_tId, "images/space.jpg");
   resize(_wW, _wH);
 }
 
@@ -122,17 +122,15 @@ static void idle(void)
   dt = ((t = SDL_GetTicks()) - t0) / 1000.0;
   t0 = t;
   _alpha -= 0.5f * dt;
-  //si je veux le faire tourner vis a vis de la camera 
-  // _x = _x0 + _radius * cos(_alpha);
-  // _z = _z0 - _radius * sin(_alpha);
-  // _y = _y0;
-  
-  
+  // si je veux le faire tourner vis a vis de la camera
+  _x = _x0 + _radius * cos(_alpha);
+  _z = _z0 - _radius * sin(_alpha);
+  _y = _y0;
 }
 
 static void draw(void)
 {
-  //GLfloat lum[4] = {_x - 2, _y + 300, _z + 200, 1.0};
+
   GLfloat lum[4] = {0.0, 0.0, 5.0, 1.0};
   glClearColor(0.0f, 0.7f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -143,8 +141,8 @@ static void draw(void)
 
   gl4duBindMatrix("modelViewMatrix");
   gl4duLoadIdentityf();
-  /* je regarde l'avion depuis 1, 0, -1 */
-  gl4duLookAtf(1, 0, -2, _x, _y, _z, 0.0, 1.0, 0.0);
+  /* je regarde l'Humburger depuis 1, 0, -3 */
+  gl4duLookAtf(1, 0, -1, _x, _y, _z, 0.0, 1.0, 0.0);
   gl4duPushMatrix();
   {
     gl4duScalef(400, 400, 400);
@@ -159,14 +157,14 @@ static void draw(void)
   glUniform4fv(glGetUniformLocation(_pId, "lumpos"), 1, lum);
 
   glEnable(GL_CULL_FACE);
-  /* je place l'avions */
+  /* je place l'Humburger */
   gl4duTranslatef(_x, _y, _z);
   /* je le tourne selon sa trajectoire */
   gl4duRotatef(_alpha * 180.0f / M_PI, 0, 1, 0);
   gl4duSendMatrices();
-  /* je dessine l'avion */
+  /* je dessine l'Humburger  */
   assimpDrawScene();
-  // gl4dfBlur(0, 0, 5, 1, 0, GL_FALSE);
+  //gl4dfBlur(0, 0, 5, 1, 0, GL_FALSE);
   gl4dfSobelSetMixMode(GL4DF_SOBEL_MIX_MULT);
   gl4dfSobel(0, 0, GL_FALSE);
 }
